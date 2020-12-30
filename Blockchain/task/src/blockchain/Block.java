@@ -6,14 +6,16 @@ public class Block {
     private long timestamp;
     private String previousHash;
     private String currentHash;
-    private String message;
+    private long magicNumber;
+    private int generationTime;
 
-    public Block(int id, long timestamp, String message, String previousHash, String currentHash) {
+    public Block(int id, long timestamp, long magicNumber, String previousHash, String currentHash, int generationTime) {
         this.id = id;
         this.timestamp = timestamp;
-        this.message = message;
+        this.magicNumber = magicNumber;
         this.previousHash = previousHash;
         this.currentHash = currentHash;
+        this.generationTime = generationTime;
     }
 
     public int getId() {
@@ -32,8 +34,8 @@ public class Block {
         return currentHash;
     }
 
-    public String getMessage() {
-        return message;
+    public long getMagicNumber() {
+        return magicNumber;
     }
 
     @Override
@@ -41,7 +43,9 @@ public class Block {
         return "Block:" +
                 "\nId: " + id +
                 "\nTimestamp: " + timestamp +
+                "\nMagic number: " + magicNumber +
                 "\nHash of the previous block:\n" + previousHash +
-                "\nHash of the block:\n" + currentHash;
+                "\nHash of the block:\n" + currentHash +
+                "\nBlock was generating for " + generationTime + " seconds";
     }
 }

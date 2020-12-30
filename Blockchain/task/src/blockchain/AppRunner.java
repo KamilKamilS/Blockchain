@@ -4,9 +4,9 @@ public class AppRunner {
 
     private static Blockchain blockchain;
 
-    static void generateBlockchain(int size) {
-        blockchain = new Blockchain(size);
-        for (int i = 0; i < size; i++) {
+    static void generateBlockchain(int numberOfZeros) {
+        blockchain = new Blockchain(numberOfZeros);
+        for (int i = 0; i < blockchain.getChain().length; i++) {
             blockchain.generateNewBlock();
         }
     }
