@@ -11,9 +11,8 @@ public class AppRunner {
         }
     }
 
-    static void printAllBlocks() {
-        for (Block block : blockchain.getChain()) {
-            System.out.println(block + "\n");
-        }
+    static void printBlockchain() {
+        System.out.println(blockchain);
+        System.out.println(blockchain.validate());
     }
 }

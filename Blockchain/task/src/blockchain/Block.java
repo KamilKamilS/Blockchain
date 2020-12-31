@@ -2,10 +2,11 @@ package blockchain;
 
 import blockchain.util.HashUtil;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Block {
+public class Block implements Serializable {
 
     private int id;
     private long timestamp;
@@ -16,7 +17,7 @@ public class Block {
 
     public Block(Block previousBlock, int requiredZeros) {
         this.timestamp = new Date().getTime();
-        this.previousHash = previousBlock == null? "0" : previousBlock.previousHash;
+        this.previousHash = previousBlock == null? "0" : previousBlock.currentHash;
         this.id = previousBlock == null? 0 : previousBlock.id + 1;
         generateHash(requiredZeros);
         this.generationTime = calculateGenerationTimeInSeconds(timestamp);
@@ -67,6 +68,6 @@ public class Block {
                 "\nMagic number: " + magicNumber +
                 "\nHash of the previous block:\n" + previousHash +
                 "\nHash of the block:\n" + currentHash +
-                "\nBlock was generating for " + generationTime + " seconds";
+                "\nBlock was generating for " + generationTime + " seconds\n";
     }
 }

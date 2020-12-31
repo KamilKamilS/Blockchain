@@ -10,6 +10,6 @@ public class Main {
 
         int numberOfZeros = Integer.valueOf(scanner.nextLine());
         AppRunner.generateBlockchain(numberOfZeros);
-        AppRunner.printAllBlocks();
+        AppRunner.printBlockchain();
     }
 }
