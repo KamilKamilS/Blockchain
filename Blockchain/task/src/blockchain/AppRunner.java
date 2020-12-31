@@ -15,11 +15,7 @@ public class AppRunner {
         executor.submit(new Miner());
 
         if (Blockchain.getInstance().getSize() >= 5) {
-            try {
-                executor.awaitTermination(10, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            executor.shutdownNow();
         }
     }
 
