@@ -12,27 +12,57 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Blockchain implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static Blockchain instance = new Blockchain();
     private List<Block> chain;
     private int requiredZeros;
 
-    public Blockchain(int requiredZeros) {
+    private Blockchain() {
         this.chain = new ArrayList<>();
-        this.requiredZeros = requiredZeros;
+        this.requiredZeros = 1;
     }
 
     public List<Block> getChain() {
         return chain;
     }
 
-    void generateNewBlock() {
-        Block block;
-        if (this.chain.size() == 0) {
-            block = new Block(null, requiredZeros);
-        } else {
-            block = new Block(chain.get(chain.size() - 1), requiredZeros);
-        }
-        this.chain.add(block);
+    public int getSize() {
+        return this.chain.size();
     }
+
+    public static Blockchain getInstance() {
+        return instance;
+    }
+
+    public int getRequiredZeros() {
+        return requiredZeros;
+    }
+
+    public Block getPreviousBlock() {
+        return chain.get(chain.size() - 1);
+    }
+
+    public void addToChain(Block block) {
+        chain.add(block);
+        System.out.println(block);
+        calculateMiningLevel(block);
+        System.out.println();
+        if (getSize() == 5) {
+            System.exit(0);
+        }
+    }
+
+    private void calculateMiningLevel(Block block) {
+        if (block.getGenerationTime() > 60) {
+            this.requiredZeros--;
+            System.out.println("N was decreased to " + requiredZeros);
+        } else if (block.getGenerationTime() < 5) {
+            requiredZeros++;
+            System.out.println("N was increased to " + requiredZeros);
+        } else {
+            System.out.println("N stays the same");
+        }
+    }
+
 
     @Override
     public String toString() {
@@ -44,7 +74,7 @@ public class Blockchain implements Serializable {
         return sb.toString();
     }
 
-    boolean validate() {
+    public boolean validate() {
         for (int i = 0; i < chain.size(); i++) {
             if (i == 0) {
                 if (!chain.get(i).getPreviousHash().equals("0")) {
@@ -78,4 +108,6 @@ public class Blockchain implements Serializable {
         }
         return null;
     }
+
+
 }

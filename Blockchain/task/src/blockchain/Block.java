@@ -9,14 +9,16 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Block implements Serializable {
 
     private int id;
+    private int minerId;
     private long timestamp;
     private String previousHash;
     private String currentHash;
     private long magicNumber;
     private int generationTime;
 
-    public Block(Block previousBlock, int requiredZeros) {
+    public Block(Block previousBlock, int requiredZeros, int minerId) {
         this.timestamp = new Date().getTime();
+        this.minerId = minerId;
         this.previousHash = previousBlock == null? "0" : previousBlock.currentHash;
         this.id = previousBlock == null? 0 : previousBlock.id + 1;
         generateHash(requiredZeros);
@@ -60,14 +62,19 @@ public class Block implements Serializable {
         return magicNumber;
     }
 
+    public int getGenerationTime() {
+        return generationTime;
+    }
+
     @Override
     public String toString() {
         return "Block:" +
+                "\nCreated by miner # " + minerId +
                 "\nId: " + id +
                 "\nTimestamp: " + timestamp +
                 "\nMagic number: " + magicNumber +
                 "\nHash of the previous block:\n" + previousHash +
                 "\nHash of the block:\n" + currentHash +
-                "\nBlock was generating for " + generationTime + " seconds\n";
+                "\nBlock was generating for " + generationTime + " seconds";
     }
 }

@@ -1,18 +1,24 @@
 package blockchain;
 
+import miner.Miner;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class AppRunner {
 
-    private static Blockchain blockchain;
 
-    static void generateBlockchain(int requiredZeros) {
-        blockchain = new Blockchain(requiredZeros);
-        for (int i = 0; i < 5; i++) {
-            blockchain.generateNewBlock();
+
+    static void createMainers(int number) {
+        ExecutorService executor = Executors.newFixedThreadPool(number);
+        executor.submit(new Miner());
+
+        if (Blockchain.getInstance().getSize() >= 5) {
+            executor.shutdown();
         }
     }
 
     static void printBlockchain() {
-        System.out.println(blockchain);
-        System.out.println(blockchain.validate());
+        System.out.println(Blockchain.getInstance());
     }
 }
