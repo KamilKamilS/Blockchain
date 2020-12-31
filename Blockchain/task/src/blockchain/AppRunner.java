@@ -4,6 +4,7 @@ import miner.Miner;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class AppRunner {
 
@@ -14,7 +15,11 @@ public class AppRunner {
         executor.submit(new Miner());
 
         if (Blockchain.getInstance().getSize() >= 5) {
-            executor.shutdown();
+            try {
+                executor.awaitTermination(10, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
