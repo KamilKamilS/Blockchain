@@ -3,60 +3,39 @@ package blockchain;
 import blockchain.util.HashUtil;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Blockchain {
 
-    private Block[] chain;
-    private int id;
-    private int startZeros;
+    private List<Block> chain;
+    private int requiredZeros;
 
-    public Blockchain(int startZeros) {
-        this.id = 1;
-        chain = new Block[5];
-        this.startZeros = startZeros;
+    public Blockchain(int requiredZeros) {
+        this.chain = new ArrayList<>();
+        this.requiredZeros = requiredZeros;
     }
 
-    public Block[] getChain() {
+    public List<Block> getChain() {
         return chain;
     }
 
     void generateNewBlock() {
-        long startTime = new Date().getTime() ;
-        String hash = "";
-        long magicNumber = 0l;
-        do {
-            magicNumber = ThreadLocalRandom.current().nextLong();
-            hash = HashUtil.applySha256(String.valueOf(magicNumber));
-        } while (!validHash(hash));
-
-        long endTime = new Date().getTime();
-
-        int generationTime = (int)(endTime - startTime) / 1000;
-
         Block block;
-        if (id == 1) {
-            block = new Block(id, new Date().getTime(), magicNumber, "0", hash, generationTime);
+        if (this.chain.size() == 0) {
+            block = new Block(null, requiredZeros);
         } else {
-            block = new Block(id, new Date().getTime(), magicNumber, chain[id - 2].getCurrentHash(), hash, generationTime);
+            block = new Block(chain.get(chain.size() - 1), requiredZeros);
         }
-        chain[id - 1] = block;
-        id++;
+        this.chain.add(block);
     }
 
-    private boolean validHash(String hash) {
-        for (int i = 0; i < startZeros; i++) {
-            if(hash.charAt(i)!='0') {
-                return false;
-            }
-        }
-        return true;
-    }
 
     boolean validate() {
         for (Block block : chain) {
-            if(!block.getCurrentHash().equals(HashUtil.applySha256(String.valueOf(block.getMagicNumber())))) {
+            if(!block.getCurrentHash().equals(HashUtil.applySha256(String.valueOf(block.getMagicNumber() + block.getId() + block.getTimestamp())))) {
                 return false;
             }
         }
